@@ -1,8 +1,11 @@
 package org.library.convertor.impl;
 
+import org.library.config.security.JWTTokenFilter;
 import org.library.convertor.BookConvertor;
 import org.library.model.entity.Book;
 import org.library.rest.dto.BookDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -10,8 +13,12 @@ import java.util.stream.Collectors;
 
 @Component
 public class BookConverterImpl implements BookConvertor {
+
+    private static final Logger logger = LoggerFactory.getLogger(BookConverterImpl.class);
+
     @Override
-    public Book convertToEntity(BookDTO bookDTO) {
+    public Book convertToEntity(final BookDTO bookDTO) {
+        logger.info("start convert to Entity");
         Book book = new Book();
 
         book.setId(bookDTO.getId());
@@ -29,7 +36,8 @@ public class BookConverterImpl implements BookConvertor {
     }
 
     @Override
-    public BookDTO convertToDTO(Book book) {
+    public BookDTO convertToDTO(final Book book) {
+        logger.info("start convert to DTO");
         BookDTO dto = new BookDTO();
 
         dto.setId(book.getId());

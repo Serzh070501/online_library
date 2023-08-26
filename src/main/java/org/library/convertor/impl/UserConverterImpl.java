@@ -3,6 +3,8 @@ package org.library.convertor.impl;
 import org.library.convertor.UserConverter;
 import org.library.model.entity.User;
 import org.library.rest.dto.UserDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,9 +13,14 @@ import java.util.stream.Collectors;
 @Component
 public class UserConverterImpl implements UserConverter {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserConverterImpl.class);
+
+
     @Override
     public User convertToEntity(UserDTO userDTO) {
-         User user = new User();
+        logger.info("start convert to Entity");
+
+        User user = new User();
 
          user.setId(userDTO.getId());
          user.setCountry(userDTO.getCountry());
@@ -25,16 +32,16 @@ public class UserConverterImpl implements UserConverter {
          user.setPhoneNumber(userDTO.getPhoneNumber());
          user.setPostalZip(userDTO.getPostalZip());
 
-
-
          return user;
     }
 
     @Override
     public UserDTO convertToDTO(User user) {
+        logger.info("start convert to DTO");
+
         UserDTO userDTO = new UserDTO();
 
-//        user.setId(userDTO.getId());
+        userDTO.setId(user.getId());
         userDTO.setCountry(user.getCountry());
         userDTO.setAddress(user.getAddress());
         userDTO.setEmail(user.getEmail());

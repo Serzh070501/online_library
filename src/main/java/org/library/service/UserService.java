@@ -1,19 +1,18 @@
 package org.library.service;
 
-import org.library.model.entity.User;
 import org.library.rest.dto.UserDTO;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
-    User register(UserDTO userDTO);
+    UserDTO register(UserDTO userDTO);
 
-    User update(String email, UserDTO userDTO);
+    UserDTO update(String email, UserDTO userDTO);
 
-    User findById(UUID id);
+    UserDTO findById(UUID id);
 
-    User findByEmail(String email);
+    UserDTO findByEmail(String email);
 
     List<UserDTO> getAll();
 
