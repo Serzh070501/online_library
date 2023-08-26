@@ -48,7 +48,7 @@ public class JWTTokenProvider {
         return UUID.fromString(claims.getSubject());
     }
 
-    public String getUsername(String token) {
+    public String getUsername(final String token) {
         return Jwts.parser()
                 .setSigningKey(appProperties.getAuth().getTokenSecret())
                 .parseClaimsJws(token)
