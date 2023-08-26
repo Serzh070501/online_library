@@ -11,10 +11,10 @@ import java.util.UUID;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, UUID> {
 
-//    List<Order> findByUserId(UUID id);
-//
-//    List<Order> findByBookIdAuthor(String author);
-//
-//    List<Order> findByBookIdTitle(String title);
+    List<Order> findByUserId(UUID id);
+
+    List<Order> findByBooksAuthor(String author);
+
+    List<Order> findByBooksTitle(String title);
 
 }

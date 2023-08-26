@@ -32,7 +32,19 @@ public class UserConverterImpl implements UserConverter {
 
     @Override
     public UserDTO convertToDTO(User user) {
-        return null;
+        UserDTO userDTO = new UserDTO();
+
+//        user.setId(userDTO.getId());
+        userDTO.setCountry(user.getCountry());
+        userDTO.setAddress(user.getAddress());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setPassword(user.getPassword());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setPhoneNumber(user.getPhoneNumber());
+        userDTO.setPostalZip(user.getPostalZip());
+
+        return userDTO;
     }
 
     @Override

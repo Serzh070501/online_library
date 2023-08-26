@@ -8,6 +8,7 @@ import org.library.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,10 +25,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserConverter userConverter;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
 
     @Override
     public User register(UserDTO userDTO) {
-        return null;
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        return userRepository.save(userConverter.convertToEntity(userDTO));
     }
 
     @Override
