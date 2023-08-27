@@ -1,4 +1,4 @@
-package org.library.rest.auth;
+package org.library.rest.response;
 
 import lombok.Getter;
 import lombok.Setter;

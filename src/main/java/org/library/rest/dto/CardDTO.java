@@ -11,7 +11,7 @@ import java.util.UUID;
 @Setter
 public class CardDTO {
 
-    private UUID id;
+    private Long id;
     private String fullName;
     private String pan;
     private Date expDate;

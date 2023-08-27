@@ -30,8 +30,16 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public void deleteCard(CardDTO cardDTO) {
-        logger.info("Deleting card " + cardDTO.getId());
-        cardRepository.delete(cardConvertor.convertToEntity(cardDTO));
+    public void deleteById(Long id) {
+        logger.info("Deleting card " + id);
+        cardRepository.deleteById(id);
+    }
+
+    @Override
+    public CardDTO getById(Long id) {
+        logger.info("getting card by ID" + id);
+        Card card = cardRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(String.format("Not found card by this id%d", id)));
+        return cardConvertor.convertToDTO(card);
     }
 }

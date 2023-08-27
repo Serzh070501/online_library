@@ -11,7 +11,7 @@ public interface OrderService {
 
     List<OrderDTO> getAll();
 
-    OrderDTO create(OrderDTO orderDTO);
+    OrderDTO create(OrderDTO dto);
 
     List<OrderDTO> getByUserId(UUID userId);
 

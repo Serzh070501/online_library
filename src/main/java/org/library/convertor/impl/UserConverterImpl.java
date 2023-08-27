@@ -31,6 +31,7 @@ public class UserConverterImpl implements UserConverter {
          user.setLastName(userDTO.getLastName());
          user.setPhoneNumber(userDTO.getPhoneNumber());
          user.setPostalZip(userDTO.getPostalZip());
+         user.setRole(userDTO.getRole());
 
          return user;
     }
@@ -50,6 +51,7 @@ public class UserConverterImpl implements UserConverter {
         userDTO.setLastName(user.getLastName());
         userDTO.setPhoneNumber(user.getPhoneNumber());
         userDTO.setPostalZip(user.getPostalZip());
+        userDTO.setRole(user.getRole());
 
         return userDTO;
     }

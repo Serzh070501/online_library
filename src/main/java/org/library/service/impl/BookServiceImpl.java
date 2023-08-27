@@ -2,9 +2,10 @@ package org.library.service.impl;
 
 
 import org.library.convertor.BookConvertor;
-import org.library.convertor.impl.CardConverterImpl;
 import org.library.model.entity.Book;
+import org.library.model.entity.User;
 import org.library.repository.BookRepository;
+import org.library.repository.UserRepository;
 import org.library.rest.dto.BookDTO;
 import org.library.service.BookService;
 import org.slf4j.Logger;
@@ -12,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -22,7 +23,8 @@ public class BookServiceImpl implements BookService {
 
     @Autowired
     BookRepository bookRepository;
-
+    @Autowired
+    UserRepository userRepository;
     @Autowired
     BookConvertor bookConvertor;
 
@@ -38,6 +40,12 @@ public class BookServiceImpl implements BookService {
         logger.info("Searching book by title " + title);
         BookDTO bookDTO = bookConvertor.convertToDTO(bookRepository.findByTitle(title));
         return bookDTO;
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        logger.info("Deleting book By id " + id);
+        bookRepository.deleteById(id);
     }
 
     @Override
@@ -69,6 +77,53 @@ public class BookServiceImpl implements BookService {
     public void deleteByTitle(String title) {
         logger.info("Deleting book by title " + title);
         bookRepository.deleteByTitle(title);
+    }
+
+    @Override
+    public BookDTO findById(Long id) {
+        logger.info("Finding book by id " + id);
+        return bookConvertor.convertToDTO(bookRepository.findById(id).orElseThrow(() -> {
+            throw new RuntimeException("Not found book with id - " + id);
+        }));
+    }
+
+    @Override
+    public List<BookDTO> getPreferences(UUID userId) {
+        logger.info("Getting preferences for user with id - {}", userId);
+
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Book> books = optionalUser.get().getBooks();
+
+        Optional<Book> optionalBook = books.stream().findAny();
+        if (optionalBook.isEmpty()) {
+            return findAllBooks();
+        }
+        Book randomBook = optionalBook.get();
+
+        List<BookDTO> bookDtoList = new LinkedList<>();
+
+        bookRepository.findAllBooksByAuthor(randomBook.getAuthor()).stream()
+                .limit(2)
+                .map(bookConvertor::convertToDTO)
+                .forEach(bookDtoList::add);
+        bookRepository.findAllBooksByGenre(randomBook.getAuthor()).stream()
+                .limit(2)
+                .map(bookConvertor::convertToDTO)
+                .forEach(bookDtoList::add);
+        bookRepository.findAllBooksByPublisher(randomBook.getAuthor()).stream()
+                .limit(2)
+                .map(bookConvertor::convertToDTO)
+                .forEach(bookDtoList::add);
+
+        return bookDtoList;
+    }
+
+    @Override
+    public List<BookDTO> findAllBooks() {
+        return bookConvertor.bulkConvert(bookRepository.findAll());
     }
 
     @Override

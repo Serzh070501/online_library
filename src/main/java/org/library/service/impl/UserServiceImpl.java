@@ -1,5 +1,6 @@
 package org.library.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.library.convertor.UserConverter;
 import org.library.model.entity.User;
 import org.library.model.enums.Role;
@@ -16,24 +17,32 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    UserConverter userConverter;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final UserConverter userConverter;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override
     public UserDTO register(UserDTO userDTO) {
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        return userConverter.convertToDTO(userRepository.save(userConverter.convertToEntity(userDTO)));
+        User entity = userConverter.convertToEntity(userDTO);
+        entity.setRole(Role.USER);
+        return userConverter.convertToDTO(userRepository.save(entity));
+    }
+
+    @Override
+    public UserDTO registerAdmin(UserDTO userDTO) {
+        logger.info("Registering admin with dto - {}", userDTO);
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        User entity = userConverter.convertToEntity(userDTO);
+        entity.setRole(Role.ADMIN);
+        logger.info("Successfully registered admin with dto - {}", userDTO);
+        return userConverter.convertToDTO(userRepository.save(entity));
     }
 
     @Override
@@ -44,10 +53,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO findById(UUID id) {
+        logger.info("Finding user with id - {}", id.toString());
          User user = this.userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException(String.format("Not found user by this id%d", id)));
 
-        return  userConverter.convertToDTO(user);
+        UserDTO userDTO = userConverter.convertToDTO(user);
+        logger.info("Successfully found user with id - {}, result - {}", id.toString(), userDTO);
+        return userDTO;
     }
 
     @Override

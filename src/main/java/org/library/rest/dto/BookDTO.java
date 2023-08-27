@@ -9,7 +9,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class BookDTO {
-    private UUID id;
+    private Long id;
     private String title;
     private String author;
     private String genre;

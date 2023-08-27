@@ -1,8 +1,12 @@
 package org.library.service.auth.impl;
 
 
+import lombok.RequiredArgsConstructor;
 import org.library.config.security.JWTTokenProvider;
-import org.library.rest.auth.AuthRequest;
+import org.library.convertor.UserConverter;
+import org.library.rest.dto.UserDTO;
+import org.library.rest.request.AuthRequest;
+import org.library.service.UserService;
 import org.library.service.auth.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,34 +17,33 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
 
-    @Autowired
-    AuthenticationManager authenticationManager;
-
-    @Autowired
-    JWTTokenProvider tokenProvider;
+    private final JWTTokenProvider tokenProvider;
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
+    private final UserConverter userConverter;
 
     @Override
     public String login(AuthRequest authRequest) {
-        logger.info("Login process");
-        try {
-            final Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            authRequest.getUsername(),
-                            authRequest.getPassword()
-                    )
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            return tokenProvider.createToken(authentication);
+        logger.info("Logging in user for provided request - {}", authRequest);
 
-        } catch (AuthenticationException exception) {
-            throw new BadCredentialsException("Invalid username or password");
+        UserDTO byEmail = userService.findByEmail(authRequest.getUsername());
+
+        if (!passwordEncoder.matches(authRequest.getPassword(), byEmail.getPassword())) {
+            return "";
         }
-}
+
+        String authResponse = tokenProvider.createToken(userConverter.convertToEntity(byEmail));
+
+        logger.info("Successfully logged in user for provided request - {}, response - {}", authRequest , authResponse);
+        return authResponse;
+    }
 }

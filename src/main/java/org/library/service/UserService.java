@@ -8,6 +8,8 @@ import java.util.UUID;
 public interface UserService {
     UserDTO register(UserDTO userDTO);
 
+    UserDTO registerAdmin(UserDTO userDTO);
+
     UserDTO update(String email, UserDTO userDTO);
 
     UserDTO findById(UUID id);

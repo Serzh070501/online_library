@@ -9,22 +9,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/cards")
 public class CardController {
 
     @Autowired
     CardService cardService;
 
-
-
-    @PostMapping("/")
-    public ResponseEntity<CardDTO> addCard (@RequestBody CardDTO cardDTO){
+    @PostMapping()
+    public ResponseEntity<CardDTO> addCard(@RequestBody CardDTO cardDTO){
         return ResponseEntity.ok(cardService.addCard(cardDTO));
     }
 
-    @DeleteMapping(" ")
-    public ResponseEntity<String> delete (@RequestBody CardDTO cardDTO){
-        cardService.deleteCard(cardDTO);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable long id){
+        cardService.deleteById(id);
         return ResponseEntity.ok("Book was deleted successfully");
+    }
+
+    @GetMapping
+    public ResponseEntity<CardDTO> getById(@RequestParam("id") Long id){
+       return ResponseEntity.ok(cardService.getById(id));
     }
 }

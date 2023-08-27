@@ -11,8 +11,8 @@ import java.util.UUID;
 public class OrderDTO {
     private UUID id;
     private UUID userId;
-    private UUID bookId;
+    private Long bookId;
     private double price;
     private LocalDateTime date;
-    private UUID cardId;
+    private Long cardId;
 }

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
@@ -19,11 +19,6 @@ public class UserController {
 
     @Autowired
     UserConverter userConverter;
-
-    @PostMapping("/register")
-    public ResponseEntity<UserDTO> register(@RequestBody UserDTO userdto) {
-        return ResponseEntity.ok((userService.register(userdto)));
-    }
 
     @GetMapping("/search")
     public ResponseEntity<UserDTO> search(@RequestParam("email") String email){

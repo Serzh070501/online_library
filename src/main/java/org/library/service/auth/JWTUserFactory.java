@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.fasterxml.jackson.databind.type.LogicalType.Collection;
+
 public final class JWTUserFactory {
 
     public static JWTUser create(User user) {
@@ -19,12 +21,7 @@ public final class JWTUserFactory {
                 user.getPassword(),
                 user.getFirstName(),
                 user.getLastName(),
-                mapToGrandAuthorities(user.getRoles()));
+                List.of(new SimpleGrantedAuthority(user.getRole().name())));
     }
 
-    private static List<GrantedAuthority> mapToGrandAuthorities(Set<Role> roles) {
-        return roles.stream()
-                .map(o -> new SimpleGrantedAuthority(o.name()))
-                .collect(Collectors.toList());
-    }
 }

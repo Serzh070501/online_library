@@ -14,7 +14,8 @@ import java.util.UUID;
 @Table(name = "cards")
 public class Card {
     @Id
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column(name = "full_name")
     private String fullName;
     @Column(name = "pan")

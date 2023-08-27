@@ -1,6 +1,6 @@
 package org.library.service.auth;
 
-import org.library.rest.auth.AuthRequest;
+import org.library.rest.request.AuthRequest;
 
 public interface AuthService {
 

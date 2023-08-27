@@ -15,13 +15,14 @@ import java.util.UUID;
 @Table(name = "orders")
 public class Order {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @Column(name = "price")
     private double price;
     @Column(name = "date")
     private LocalDateTime date;
     @Column(name = "card_id")
-    private UUID cardId;
+    private Long cardId;
     @ManyToMany
     @JoinTable(name = "orders_books",
             joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"),
