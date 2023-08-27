@@ -2,6 +2,7 @@ package org.library.service.impl;
 
 import org.library.convertor.UserConverter;
 import org.library.model.entity.User;
+import org.library.model.enums.Role;
 import org.library.repository.UserRepository;
 import org.library.rest.dto.UserDTO;
 import org.library.service.UserService;
@@ -30,40 +31,37 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User register(UserDTO userDTO) {
+    public UserDTO register(UserDTO userDTO) {
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        return userRepository.save(userConverter.convertToEntity(userDTO));
+        return userConverter.convertToDTO(userRepository.save(userConverter.convertToEntity(userDTO)));
     }
 
     @Override
-    public User update(String email, UserDTO userDTO) {
-        final User user = userRepository.findByEmail(email);
-        return null;
+    public UserDTO update(String email, UserDTO userDTO) {
+        return userConverter.convertToDTO(userRepository.findByEmail(email));
+
     }
 
     @Override
-    public User findById(UUID id) {
-        return null;
+    public UserDTO findById(UUID id) {
+         User user = this.userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(String.format("Not found user by this id%d", id)));
+
+        return  userConverter.convertToDTO(user);
     }
 
-//    @Override
-//    public User findById(UUID id) {
-//        final User user = userRepository.findById(id);
-//        return user;
-//    }
-
     @Override
-    public User findByEmail(String email) {
-        return null;
+    public UserDTO findByEmail(String email) {
+        return userConverter.convertToDTO(userRepository.findByEmail(email));
     }
 
     @Override
     public List<UserDTO> getAll() {
-        return null;
+        return userConverter.bulkConvert(userRepository.findAll());
     }
 
     @Override
     public void delete(String email) {
-
+        userRepository.deleteByEmail(email);
     }
 }

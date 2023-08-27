@@ -1,6 +1,7 @@
 package org.library.service.auth.impl;//package org.library.service.impl;
 
 
+import org.library.convertor.UserConverter;
 import org.library.model.entity.User;
 import org.library.service.UserService;
 import org.library.service.auth.JWTUserFactory;
@@ -21,13 +22,13 @@ public class JWTUserDetailService implements UserDetailsService {
     @Autowired
     UserService userService;
 
-    public JWTUserDetailService(UserService userService) {
-        this.userService = userService;
-    }
+    @Autowired
+    UserConverter userConverter;
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        final User user = this.userService.findByEmail(username);
+        final User user = userConverter.convertToEntity(userService.findByEmail(username));
         LOGGER.debug("IN loadUserByUsername  - user: with username: {} successfully loaded by ", username);
         return JWTUserFactory.create(user);
     }
